@@ -1,0 +1,24 @@
+from pydantic import BaseModel
+
+
+class DetalleBase(BaseModel):
+    cantidad: int
+    pedido_id: int
+    plato_id: int
+
+
+class DetalleCreate(DetalleBase):
+    pass
+
+
+class DetalleUpdate(BaseModel):
+    cantidad: int | None = None
+    pedido_id: int | None = None
+    plato_id: int | None = None
+
+
+class DetalleResponse(DetalleBase):
+    id: int
+
+    class Config:
+        from_attributes = True

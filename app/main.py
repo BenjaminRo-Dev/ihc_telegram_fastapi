@@ -4,8 +4,15 @@ from contextlib import asynccontextmanager
 from fastapi.responses import HTMLResponse
 from app.core.cors import configuracion_cors
 from app.core.database import init_db
-from app.routers import bot_router
-# from app.routers import bot_router, order_router, driver_router
+from app.routers import (
+    bot_router,
+    usuario_router,
+    delivery_router,
+    categoria_router,
+    plato_router,
+    pedido_router,
+    detalle_router
+)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -46,7 +53,11 @@ def root():
 
 
 app.include_router(bot_router.router)
-# app.include_router(order_router.router)
-# app.include_router(driver_router.router)
+app.include_router(usuario_router.router)
+app.include_router(delivery_router.router)
+app.include_router(categoria_router.router)
+app.include_router(plato_router.router)
+app.include_router(pedido_router.router)
+app.include_router(detalle_router.router)
 
 
