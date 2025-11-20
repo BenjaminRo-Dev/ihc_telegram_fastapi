@@ -6,3 +6,4 @@ httpx # Cliente HTTP para hacer solicitudes
 python-dotenv # Para cargar variables de entorno desde un archivo .env
 psycopg2-binary # Driver para PostgreSQL
 alembic # Para migraciones de base de datos
+pydantic[email]
