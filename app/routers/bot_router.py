@@ -1,21 +1,22 @@
 from fastapi import APIRouter, Request
-from app.services.telegram_service import send_message
+from app.services.telegram_service import abrir_menu, enviar_mensaje
 
 router = APIRouter(tags=["Telegram Bot"])
 
 @router.post("/webhook")
 async def telegram_webhook(request: Request):
     data = await request.json()
-
     if "message" in data:
         chat_id = data["message"]["chat"]["id"]
-        text = data["message"].get("text", "").lower()
+        texto = data["message"].get("text", "").lower()
+        print("Texto recibido:", texto)
 
-        if text == "/start":
-            await send_message(chat_id, "👋 ¡Bienvenido al sistema de pedidos!")
-        elif text == "/menu":
-            await send_message(chat_id, "🍕 Menú:\n1. Pizza\n2. Hamburguesa\n3. Ensalada")
+        if texto == "/iniciar":
+            print("chat_id:", chat_id)
+            await enviar_mensaje(chat_id, "👋 ¡Bienvenido al sistema de pedidos!")
+        elif texto == "/menu":
+            await abrir_menu(chat_id)
         else:
-            await send_message(chat_id, f"Recibí tu mensaje: {text}")
+            await enviar_mensaje(chat_id, f"Recibí tu mensaje: {texto}")
 
     return {"ok": True}

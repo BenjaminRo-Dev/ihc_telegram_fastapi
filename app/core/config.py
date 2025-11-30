@@ -5,7 +5,7 @@ from typing import Optional
 load_dotenv()
 
 class Settings:
-    BOT_TOKEN: str|None = os.getenv("BOT_TOKEN")
+    
     
     DB_USER = os.getenv("DB_USER")
     DB_PASSWORD = os.getenv("DB_PASSWORD")
@@ -14,7 +14,11 @@ class Settings:
     DB_NAME = os.getenv("DB_NAME")
     DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
+    TELEGRAM_BOT_TOKEN: str|None = os.getenv("TELEGRAM_BOT_TOKEN")
+    TELEGRAM_URL = os.getenv("TELEGRAM_URL")
+    TELEGRAM_BOT = f"{TELEGRAM_URL}{TELEGRAM_BOT_TOKEN}"
     FRONTEND = os.getenv("FRONTEND")
+    
 
 
 settings = Settings()
