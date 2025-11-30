@@ -41,7 +41,7 @@ def root():
             <script src="https://telegram.org/js/telegram-web-app.js"></script>
         </head>
         <body>
-            <h1 style="text-align:center;">Grupo 8</h1>
+            <h1 style="text-align:center;">Grupo 8 - Domingo 19</h1>
 
             <script>
                 const tg = window.Telegram.WebApp;
