@@ -1,6 +1,6 @@
 from sqlmodel import Session, select
-from app.models.modelos import Pedido
-from app.schemas.pedido_schema import PedidoCreate, PedidoUpdate
+from app.models.modelos import Pedido, Detalle
+from app.schemas.pedido_schema import PedidoCreate, PedidoUpdate, PedidoCompletoCreate
 
 
 class PedidoService:
@@ -69,3 +69,51 @@ class PedidoService:
         """Obtener pedidos por estado"""
         pedidos = db.exec(select(Pedido).where(Pedido.estado == estado)).all()
         return pedidos
+
+    @staticmethod
+    def crear_pedido_completo(db: Session, pedido_completo: PedidoCompletoCreate):
+        """Crear un pedido completo con sus detalles"""
+        try:
+            # Crear el pedido
+            pedido_data = {
+                "total": pedido_completo.total,
+                "estado": pedido_completo.estado,
+                "ubicacion_entrega": pedido_completo.ubicacion_entrega,
+                "precio_delivery": pedido_completo.precio_delivery,
+                "chat_id": pedido_completo.chat_id,
+                "nombre_usuario": pedido_completo.nombre_usuario,
+                "delivery_id": pedido_completo.delivery_id
+            }
+            db_pedido = Pedido(**pedido_data)
+            db.add(db_pedido)
+            db.flush()  # Para obtener el ID del pedido sin hacer commit
+            
+            # Verificar que el pedido tiene ID
+            if db_pedido.id is None:
+                raise ValueError("No se pudo generar el ID del pedido")
+            
+            # Crear los detalles asociados al pedido
+            detalles_creados = []
+            for detalle_data in pedido_completo.detalles:
+                db_detalle = Detalle(
+                    cantidad=detalle_data.cantidad,
+                    observacion=detalle_data.observacion,
+                    pedido_id=db_pedido.id,
+                    plato_id=detalle_data.plato_id
+                )
+                db.add(db_detalle)
+                detalles_creados.append(db_detalle)
+            
+            # Confirmar toda la transacción
+            db.commit()
+            db.refresh(db_pedido)
+            
+            # Refrescar los detalles
+            for detalle in detalles_creados:
+                db.refresh(detalle)
+            
+            return db_pedido
+        
+        except Exception as e:
+            db.rollback()
+            raise e

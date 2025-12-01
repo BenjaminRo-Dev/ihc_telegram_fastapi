@@ -1,6 +1,13 @@
 from pydantic import BaseModel
 
 
+class DetalleParaPedido(BaseModel):
+    """Schema para crear detalles dentro de un pedido completo"""
+    cantidad: int
+    observacion: str
+    plato_id: int
+
+
 class PedidoBase(BaseModel):
     total: float
     estado: str
@@ -12,6 +19,18 @@ class PedidoBase(BaseModel):
 
 class PedidoCreate(PedidoBase):
     delivery_id: int | None = None
+
+
+class PedidoCompletoCreate(BaseModel):
+    """Schema para crear un pedido completo con sus detalles"""
+    total: float
+    estado: str
+    ubicacion_entrega: str
+    precio_delivery: float
+    chat_id: str
+    nombre_usuario: str
+    delivery_id: int | None = None
+    detalles: list[DetalleParaPedido]
 
 
 class PedidoUpdate(BaseModel):

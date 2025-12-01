@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session
 from app.core.database import get_session
 from app.services.pedido_service import PedidoService
-from app.schemas.pedido_schema import PedidoCreate, PedidoUpdate, PedidoResponse
+from app.schemas.pedido_schema import PedidoCreate, PedidoUpdate, PedidoResponse, PedidoCompletoCreate
 
 router = APIRouter(
     prefix="/pedidos",
@@ -43,10 +43,11 @@ def get_pedido(pedido_id: int, db: Session = Depends(get_session)):
     return pedido
 
 
-@router.post("/", response_model=PedidoResponse, status_code=201)
-def create_pedido(pedido: PedidoCreate, db: Session = Depends(get_session)):
-    """Crear un nuevo pedido"""
-    return PedidoService.create(db, pedido)
+# @router.post("/", response_model=PedidoResponse, status_code=201)
+# def create_pedido(pedido: PedidoCreate, db: Session = Depends(get_session)):
+#     """Crear un nuevo pedido"""
+#     return PedidoService.create(db, pedido)
+
 
 
 @router.put("/{pedido_id}", response_model=PedidoResponse)
@@ -58,10 +59,19 @@ def update_pedido(pedido_id: int, pedido: PedidoUpdate, db: Session = Depends(ge
     return db_pedido
 
 
-@router.delete("/{pedido_id}", response_model=PedidoResponse)
-def delete_pedido(pedido_id: int, db: Session = Depends(get_session)):
-    """Eliminar un pedido"""
-    db_pedido = PedidoService.delete(db, pedido_id)
-    if not db_pedido:
-        raise HTTPException(status_code=404, detail="Pedido no encontrado")
-    return db_pedido
+# @router.delete("/{pedido_id}", response_model=PedidoResponse)
+# def delete_pedido(pedido_id: int, db: Session = Depends(get_session)):
+#     """Eliminar un pedido"""
+#     db_pedido = PedidoService.delete(db, pedido_id)
+#     if not db_pedido:
+#         raise HTTPException(status_code=404, detail="Pedido no encontrado")
+#     return db_pedido
+
+@router.post("/completo", response_model=PedidoResponse, status_code=201)
+def crear_pedido_completo(pedido_completo: PedidoCompletoCreate, db: Session = Depends(get_session)):
+    """Crear un pedido completo con sus detalles"""
+    try:
+        return PedidoService.crear_pedido_completo(db, pedido_completo)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error al crear el pedido completo: {str(e)}")
+
