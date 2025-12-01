@@ -1,17 +1,6 @@
 from datetime import datetime, timezone
 from sqlmodel import SQLModel, Field, Relationship
 
-
-class Usuario(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
-    user_id: str
-    nombre: str
-    username: str
-    telefono: str
-
-    pedidos: list["Pedido"] = Relationship(back_populates="usuario")
-
-
 class Delivery(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     nombre: str
@@ -47,10 +36,8 @@ class Pedido(SQLModel, table=True):
     ubicacion_entrega: str
     precio_delivery: float
 
-    usuario_id: int = Field(foreign_key="usuario.id")
     delivery_id: int | None = Field(default=None, foreign_key="delivery.id")
 
-    usuario: Usuario = Relationship(back_populates="pedidos")
     delivery: Delivery | None = Relationship(back_populates="pedidos")
 
     detalles: list["Detalle"] = Relationship(back_populates="pedido")

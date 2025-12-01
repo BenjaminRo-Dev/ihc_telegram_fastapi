@@ -5,7 +5,6 @@ from app.core.cors import configuracion_cors
 from app.core.database import init_db
 from app.routers import (
     bot_router,
-    usuario_router,
     delivery_router,
     categoria_router,
     plato_router,
@@ -33,7 +32,6 @@ def root():
 
 
 app.include_router(bot_router.router)
-app.include_router(usuario_router.router)
 app.include_router(delivery_router.router)
 app.include_router(categoria_router.router)
 app.include_router(plato_router.router)

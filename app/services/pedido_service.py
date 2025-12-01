@@ -52,11 +52,12 @@ class PedidoService:
         db.commit()
         return db_pedido
 
-    @staticmethod
-    def get_by_usuario(db: Session, usuario_id: int):
-        """Obtener pedidos de un usuario"""
-        pedidos = db.exec(select(Pedido).where(Pedido.usuario_id == usuario_id)).all()
-        return pedidos
+    #TODO: Aqui podria ponerle chat_id en vez de usuario_id 
+    # @staticmethod
+    # def get_by_usuario(db: Session, usuario_id: int):
+    #     """Obtener pedidos de un usuario"""
+    #     pedidos = db.exec(select(Pedido).where(Pedido.usuario_id == usuario_id)).all()
+    #     return pedidos
 
     @staticmethod
     def get_by_delivery(db: Session, delivery_id: int):

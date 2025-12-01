@@ -6,7 +6,6 @@ class PedidoBase(BaseModel):
     estado: str
     ubicacion_entrega: str
     precio_delivery: float
-    usuario_id: int
 
 
 class PedidoCreate(PedidoBase):
@@ -18,7 +17,6 @@ class PedidoUpdate(BaseModel):
     estado: str | None = None
     ubicacion_entrega: str | None = None
     precio_delivery: float | None = None
-    usuario_id: int | None = None
     delivery_id: int | None = None
 
 
