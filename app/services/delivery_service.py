@@ -55,5 +55,5 @@ class DeliveryService:
     @staticmethod
     def get_available(db: Session):
         """Obtener deliveries disponibles"""
-        deliveries = db.exec(select(Delivery).where(Delivery.estado == True)).all()
+        deliveries = db.exec(select(Delivery).where(Delivery.disponible == True)).all()
         return deliveries

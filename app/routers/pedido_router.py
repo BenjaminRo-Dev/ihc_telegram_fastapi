@@ -16,10 +16,10 @@ def get_pedidos(db: Session = Depends(get_session)):
     return PedidoService.get_all(db)
 
 
-@router.get("/usuario/{usuario_id}", response_model=list[PedidoResponse])
-def get_pedidos_por_usuario(usuario_id: int, db: Session = Depends(get_session)):
-    """Obtener pedidos de un usuario"""
-    return PedidoService.get_by_usuario(db, usuario_id)
+@router.get("/chat/{chat_id}", response_model=list[PedidoResponse])
+def get_pedidos_por_chat(chat_id: str, db: Session = Depends(get_session)):
+    """Obtener pedidos por chat_id"""
+    return PedidoService.get_by_chat_id(db, chat_id)
 
 
 @router.get("/delivery/{delivery_id}", response_model=list[PedidoResponse])

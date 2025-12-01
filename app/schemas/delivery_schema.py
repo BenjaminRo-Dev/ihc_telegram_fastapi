@@ -4,6 +4,7 @@ from pydantic import BaseModel, EmailStr
 class DeliveryBase(BaseModel):
     nombre: str
     email: EmailStr
+    ubicacion: str
 
 
 class DeliveryCreate(DeliveryBase):
@@ -14,12 +15,13 @@ class DeliveryUpdate(BaseModel):
     nombre: str | None = None
     email: EmailStr | None = None
     password: str | None = None
-    estado: bool | None = None
+    ubicacion: str | None = None
+    disponible: bool | None = None
 
 
 class DeliveryResponse(DeliveryBase):
     id: int
-    estado: bool
+    disponible: bool
 
     class Config:
         from_attributes = True

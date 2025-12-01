@@ -4,6 +4,7 @@ from pydantic import BaseModel
 class PlatoBase(BaseModel):
     nombre: str
     precio_venta: float
+    url_imagen: str
     categoria_id: int
 
 
@@ -14,6 +15,7 @@ class PlatoCreate(PlatoBase):
 class PlatoUpdate(BaseModel):
     nombre: str | None = None
     precio_venta: float | None = None
+    url_imagen: str | None = None
     categoria_id: int | None = None
 
 

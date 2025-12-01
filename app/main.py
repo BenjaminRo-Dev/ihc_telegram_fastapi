@@ -9,7 +9,8 @@ from app.routers import (
     categoria_router,
     plato_router,
     pedido_router,
-    detalle_router
+    detalle_router,
+    configuracion_router
 )
 
 @asynccontextmanager
@@ -37,5 +38,6 @@ app.include_router(categoria_router.router)
 app.include_router(plato_router.router)
 app.include_router(pedido_router.router)
 app.include_router(detalle_router.router)
+app.include_router(configuracion_router.router)
 
 

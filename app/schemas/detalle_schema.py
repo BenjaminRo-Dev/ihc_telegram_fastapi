@@ -3,6 +3,7 @@ from pydantic import BaseModel
 
 class DetalleBase(BaseModel):
     cantidad: int
+    observacion: str
     pedido_id: int
     plato_id: int
 
@@ -13,6 +14,7 @@ class DetalleCreate(DetalleBase):
 
 class DetalleUpdate(BaseModel):
     cantidad: int | None = None
+    observacion: str | None = None
     pedido_id: int | None = None
     plato_id: int | None = None
 
