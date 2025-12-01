@@ -53,3 +53,20 @@ def delete_delivery(delivery_id: int, db: Session = Depends(get_session)):
     if not db_delivery:
         raise HTTPException(status_code=404, detail="Delivery no encontrado")
     return db_delivery
+
+
+
+@router.get("/mas-cercano/{ubicacion_entrega}", response_model=DeliveryResponse)
+def get_delivery_mas_cercano(ubicacion_entrega: str, db: Session = Depends(get_session)):
+    """
+    Obtener el delivery disponible más cercano a la ubicación de entrega.
+    La ubicación debe estar en formato: latitud,longitud
+    Ejemplo: -17.794013578375374,-63.20399069609337
+    """
+    try:
+        delivery = DeliveryService.get_delivery_mas_cercano(db, ubicacion_entrega)
+        if not delivery:
+            raise HTTPException(status_code=404, detail="No hay deliveries disponibles")
+        return delivery
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
