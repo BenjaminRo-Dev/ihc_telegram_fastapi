@@ -37,6 +37,22 @@ def get_delivery_mas_cercano(db: Session = Depends(get_session)):
         raise HTTPException(status_code=400, detail=str(e))
 
 
+@router.get("/calcular-tarifa/{ubicacion_entrega}")
+def calcular_tarifa_delivery(ubicacion_entrega: str, db: Session = Depends(get_session)):
+    """
+    Calcular la tarifa del delivery basándose en la distancia.
+    La ubicación debe estar en formato: latitud,longitud
+    Ejemplo: -17.794013578375374,-63.20399069609337
+    
+    Retorna la tarifa calculada según: (distancia_km * precio_km) + precio_base
+    """
+    try:
+        tarifa = DeliveryService.calcular_tarifa_delivery(db, ubicacion_entrega)
+        return {"tarifa": tarifa}
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
 @router.get("/{delivery_id}", response_model=DeliveryResponse)
 def get_delivery(delivery_id: int, db: Session = Depends(get_session)):
     """Obtener un delivery por ID"""

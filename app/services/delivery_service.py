@@ -127,3 +127,39 @@ class DeliveryService:
                 continue
         
         return delivery_mas_cercano
+
+    @staticmethod
+    def calcular_tarifa_delivery(db: Session, ubicacion_entrega: str) -> float:
+        """
+        Calcular la tarifa del delivery basándose en la distancia entre
+        la ubicación de entrega y el restaurante.
+        ubicacion_entrega debe estar en formato: "latitud,longitud"
+        
+        Fórmula: (distancia_km * precio_km) + precio_base
+        """
+        # Obtener la configuración del restaurante
+        configuracion = db.exec(select(Configuracion)).first()
+        if not configuracion:
+            raise ValueError("No se encontró configuración del restaurante")
+        
+        # Parsear la ubicación del restaurante
+        try:
+            lat_restaurante, lon_restaurante = map(float, configuracion.ubicacion_restaurante.split(','))
+        except ValueError:
+            raise ValueError("Formato de ubicación del restaurante inválido")
+        
+        # Parsear la ubicación de entrega
+        try:
+            lat_entrega, lon_entrega = map(float, ubicacion_entrega.split(','))
+        except ValueError:
+            raise ValueError("Formato de ubicación de entrega inválido. Use: 'latitud,longitud'")
+        
+        # Calcular distancia en kilómetros
+        distancia_km = DeliveryService.calcular_distancia_haversine(
+            lat_restaurante, lon_restaurante, lat_entrega, lon_entrega
+        )
+        
+        # Calcular tarifa: (distancia * precio_km) + precio_base
+        tarifa = (distancia_km * configuracion.precio_km) + configuracion.precio_base
+        
+        return tarifa
