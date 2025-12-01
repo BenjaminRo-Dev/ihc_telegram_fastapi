@@ -1,5 +1,5 @@
 from sqlmodel import Session, select
-from app.models.modelos import Delivery
+from app.models.modelos import Delivery, Configuracion
 from app.schemas.delivery_schema import DeliveryCreate, DeliveryUpdate
 from math import radians, sin, cos, sqrt, atan2
 
@@ -86,23 +86,27 @@ class DeliveryService:
         return distancia
 
     @staticmethod
-    def get_delivery_mas_cercano(db: Session, ubicacion_entrega: str):
+    def get_delivery_mas_cercano(db: Session):
         """
-        Obtener el delivery disponible más cercano a la ubicación de entrega
-        ubicacion_entrega debe estar en formato: "latitud,longitud"
-        Por ejemplo: "-17.794013578375374,-63.20399069609337"
+        Obtener el delivery disponible más cercano a la ubicación del restaurante.
+        La ubicación se obtiene de la primera configuración en la tabla Configuracion.
         """
+        # Obtener la configuración del restaurante
+        configuracion = db.exec(select(Configuracion)).first()
+        if not configuracion:
+            raise ValueError("No se encontró configuración del restaurante")
+        
         # Obtener todos los deliveries disponibles
         deliveries_disponibles = db.exec(select(Delivery).where(Delivery.disponible == True)).all()
         
         if not deliveries_disponibles:
             return None
         
-        # Parsear la ubicación de entrega
+        # Parsear la ubicación del restaurante
         try:
-            lat_entrega, lon_entrega = map(float, ubicacion_entrega.split(','))
+            lat_entrega, lon_entrega = map(float, configuracion.ubicacion_restaurante.split(','))
         except ValueError:
-            raise ValueError("Formato de ubicación inválido. Use: 'latitud,longitud'")
+            raise ValueError("Formato de ubicación del restaurante inválido")
         
         delivery_mas_cercano = None
         distancia_minima = float('inf')
