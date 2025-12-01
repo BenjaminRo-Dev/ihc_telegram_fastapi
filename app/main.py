@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
-from fastapi.responses import HTMLResponse
 from app.core.cors import configuracion_cors
 from app.core.database import init_db
 from app.routers import (
@@ -28,28 +27,9 @@ app = FastAPI(
 
 configuracion_cors(app)
 
-# @app.get("/")
-# def root():
-#     return {"message": "Backend Telegram funcionando =)"}
-
-@app.get("/", response_class=HTMLResponse)
+@app.get("/")
 def root():
-    return """
-    <html>
-        <head>
-            <meta charset="UTF-8" />
-            <script src="https://telegram.org/js/telegram-web-app.js"></script>
-        </head>
-        <body>
-            <h1 style="text-align:center;">Grupo 8 - Domingo 19</h1>
-
-            <script>
-                const tg = window.Telegram.WebApp;
-                tg.expand();
-            </script>
-        </body>
-    </html>
-    """
+    return {"message": "Backend Telegram funcionando =)"}
 
 
 app.include_router(bot_router.router)

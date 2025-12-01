@@ -6,27 +6,23 @@ MINIAPP = settings.FRONTEND
 
 async def enviar_mensaje(chat_id: int, text: str):
     async with httpx.AsyncClient() as client:
-        print("enviando mensaje")
         await client.post(f"{BOT}/sendMessage", json={"chat_id": chat_id, "text": text})
-        print("mensaje enviado")
 
 
-async def abrir_menu(chat_id: int):
+async def abrir_app(chat_id: int, nombre_usuario: str):
     async with httpx.AsyncClient() as client:
-        # print("abriendo menu")
-        print(f"{MINIAPP}/menu")
         await client.post(
             f"{BOT}/sendMessage",
             json={
                 "chat_id": chat_id,
-                "text": "🍽️ Aquí está el menú:",
+                "text": "🍽️ Realiza tu pedido aqui:",
                 "reply_markup": {
                     "inline_keyboard": [
                         [
                             {
-                                "text": "Abrir menú",
+                                "text": "ComeYa App",
                                 "web_app": {
-                                    "url": f"{MINIAPP}/menu" #TODO: Esperar a que Tifanny acomode el front
+                                    "url": f"{MINIAPP}?chat_id={chat_id}&nombre_usuario={nombre_usuario}"
                                 }
                             }
                         ]
@@ -34,4 +30,3 @@ async def abrir_menu(chat_id: int):
                 }
             }
         )
-        print("menu abierto")
