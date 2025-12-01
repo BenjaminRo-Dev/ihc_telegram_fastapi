@@ -4,6 +4,13 @@ from app.schemas.configuracion_schema import ConfiguracionCreate, ConfiguracionU
 
 
 class ConfiguracionService:
+    
+    @staticmethod
+    def get_first(db: Session):
+        """Obtener la primera configuración"""
+        configuracion = db.exec(select(Configuracion)).first()
+        return configuracion
+    
     @staticmethod
     def get_all(db: Session):
         """Obtener todas las configuraciones"""
