@@ -7,7 +7,7 @@ from alembic import context
 from sqlmodel import SQLModel
 from app.core.database import engine
 
-from app.models.modelos import Usuario, Delivery, Categoria, Plato, Pedido, Detalle
+from app.models.modelos import Delivery, Categoria, Plato, Pedido, Detalle, Configuracion
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
