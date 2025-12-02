@@ -73,6 +73,7 @@ class PedidoService:
     @staticmethod
     def crear_pedido_completo(db: Session, pedido_completo: PedidoCompletoCreate):
         """Crear un pedido completo con sus detalles"""
+        print("pedido_completo:", pedido_completo)
         try:
             # Crear el pedido
             pedido_data = {

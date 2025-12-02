@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel
 
 
@@ -46,6 +47,8 @@ class PedidoUpdate(BaseModel):
 class PedidoResponse(PedidoBase):
     id: int
     delivery_id: int | None
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         from_attributes = True

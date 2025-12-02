@@ -1,3 +1,4 @@
+from datetime import datetime
 from pydantic import BaseModel, EmailStr
 
 
@@ -22,6 +23,8 @@ class DeliveryUpdate(BaseModel):
 class DeliveryResponse(DeliveryBase):
     id: int
     disponible: bool
+    created_at: datetime
+    updated_at: datetime
 
     class Config:
         from_attributes = True

@@ -30,3 +30,4 @@ async def abrir_app(chat_id: int, nombre_usuario: str):
                 }
             }
         )
+        print("Url:", f"{MINIAPP}?chat_id={chat_id}&nombre_usuario={nombre_usuario}")
