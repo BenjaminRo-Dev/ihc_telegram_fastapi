@@ -35,12 +35,13 @@ async def abrir_app(chat_id: int, nombre_usuario: str):
 
 
 async def resumen_pedido(pedido):
+    print("Pedido:", pedido)
     mensaje = "🧾 *Resumen de tu pedido:*\n\n"
-    
-    mensaje += f"*Usuario:* {pedido.nombre_usuario}\n"
-    mensaje += f"*Estado:* {pedido.estado}\n"
-    mensaje += f"*Ubicación de entrega:* {pedido.ubicacion_entrega}\n"
-    mensaje += f"*Precio de delivery:* ${pedido.precio_delivery:.2f}\n\n"
+
+    mensaje += f"*Cliente:* {pedido.nombre_usuario}\n"
+    # mensaje += f"*Estado:* {pedido.estado}\n"
+    # mensaje += f"*Ubicación de entrega:* {pedido.ubicacion_entrega}\n"
+    mensaje += f"*Precio de delivery:* Bs{pedido.precio_delivery:.2f}\n\n"
 
     mensaje += "*Detalles:*\n"
     for detalle in pedido.detalles:
@@ -57,6 +58,19 @@ async def resumen_pedido(pedido):
             json={
                 "chat_id": int(pedido.chat_id),
                 "text": mensaje,
-                "parse_mode": "Markdown"
-            }
+                "parse_mode": "Markdown",
+            },
+        )
+
+
+async def estado_pedido(pedido):
+    mensaje = f"🚚 Tu pedido está: *{pedido.estado}*"
+    async with httpx.AsyncClient() as client:
+        await client.post(
+            f"{BOT}/sendMessage",
+            json={
+                "chat_id": int(pedido.chat_id),
+                "text": mensaje,
+                "parse_mode": "Markdown",
+            },
         )

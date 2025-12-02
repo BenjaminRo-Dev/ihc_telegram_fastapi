@@ -27,7 +27,7 @@ class PedidoService:
         return db_pedido
 
     @staticmethod
-    def update(db: Session, pedido_id: int, pedido: PedidoUpdate):
+    async def update(db: Session, pedido_id: int, pedido: PedidoUpdate):
         """Actualizar un pedido existente"""
         db_pedido = db.get(Pedido, pedido_id)
         if not db_pedido:
@@ -40,6 +40,9 @@ class PedidoService:
         db.add(db_pedido)
         db.commit()
         db.refresh(db_pedido)
+        
+        await telegram_service.estado_pedido(db_pedido)
+        
         return db_pedido
 
     @staticmethod

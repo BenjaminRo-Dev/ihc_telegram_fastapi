@@ -51,9 +51,9 @@ def get_pedido(pedido_id: int, db: Session = Depends(get_session)):
 
 
 @router.put("/{pedido_id}", response_model=PedidoResponse)
-def update_pedido(pedido_id: int, pedido: PedidoUpdate, db: Session = Depends(get_session)):
+async def update_pedido(pedido_id: int, pedido: PedidoUpdate, db: Session = Depends(get_session)):
     """Actualizar un pedido existente"""
-    db_pedido = PedidoService.update(db, pedido_id, pedido)
+    db_pedido = await PedidoService.update(db, pedido_id, pedido)
     if not db_pedido:
         raise HTTPException(status_code=404, detail="Pedido no encontrado")
     return db_pedido
