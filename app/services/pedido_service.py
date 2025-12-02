@@ -1,6 +1,7 @@
 from sqlmodel import Session, select
 from app.models.modelos import Pedido, Detalle
 from app.schemas.pedido_schema import PedidoCreate, PedidoUpdate, PedidoCompletoCreate
+from app.services import telegram_service
 
 
 class PedidoService:
@@ -71,9 +72,8 @@ class PedidoService:
         return pedidos
 
     @staticmethod
-    def crear_pedido_completo(db: Session, pedido_completo: PedidoCompletoCreate):
+    async def crear_pedido_completo(db: Session, pedido_completo: PedidoCompletoCreate):
         """Crear un pedido completo con sus detalles"""
-        print("pedido_completo:", pedido_completo)
         try:
             # Crear el pedido
             pedido_data = {
@@ -112,6 +112,9 @@ class PedidoService:
             # Refrescar los detalles
             for detalle in detalles_creados:
                 db.refresh(detalle)
+            
+            # Enviar resumen a Telegram
+            await telegram_service.resumen_pedido(db_pedido)
             
             return db_pedido
         

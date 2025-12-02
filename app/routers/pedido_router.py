@@ -68,10 +68,10 @@ def update_pedido(pedido_id: int, pedido: PedidoUpdate, db: Session = Depends(ge
 #     return db_pedido
 
 @router.post("/completo", response_model=PedidoResponse, status_code=201)
-def crear_pedido_completo(pedido_completo: PedidoCompletoCreate, db: Session = Depends(get_session)):
+async def crear_pedido_completo(pedido_completo: PedidoCompletoCreate, db: Session = Depends(get_session)):
     """Crear un pedido completo con sus detalles"""
     try:
-        return PedidoService.crear_pedido_completo(db, pedido_completo)
+        return await PedidoService.crear_pedido_completo(db, pedido_completo)
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Error al crear el pedido completo: {str(e)}")
 
