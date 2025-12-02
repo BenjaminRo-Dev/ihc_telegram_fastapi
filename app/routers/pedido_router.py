@@ -43,10 +43,10 @@ def get_pedido(pedido_id: int, db: Session = Depends(get_session)):
     return pedido
 
 
-# @router.post("/", response_model=PedidoResponse, status_code=201)
-# def create_pedido(pedido: PedidoCreate, db: Session = Depends(get_session)):
-#     """Crear un nuevo pedido"""
-#     return PedidoService.create(db, pedido)
+@router.post("/", response_model=PedidoResponse, status_code=201)
+def create_pedido(pedido: PedidoCreate, db: Session = Depends(get_session)):
+    """Crear un nuevo pedido"""
+    return PedidoService.create(db, pedido)
 
 
 
@@ -59,13 +59,13 @@ async def update_pedido(pedido_id: int, pedido: PedidoUpdate, db: Session = Depe
     return db_pedido
 
 
-# @router.delete("/{pedido_id}", response_model=PedidoResponse)
-# def delete_pedido(pedido_id: int, db: Session = Depends(get_session)):
-#     """Eliminar un pedido"""
-#     db_pedido = PedidoService.delete(db, pedido_id)
-#     if not db_pedido:
-#         raise HTTPException(status_code=404, detail="Pedido no encontrado")
-#     return db_pedido
+@router.delete("/{pedido_id}", response_model=PedidoResponse)
+def delete_pedido(pedido_id: int, db: Session = Depends(get_session)):
+    """Eliminar un pedido"""
+    db_pedido = PedidoService.delete(db, pedido_id)
+    if not db_pedido:
+        raise HTTPException(status_code=404, detail="Pedido no encontrado")
+    return db_pedido
 
 @router.post("/completo", response_model=PedidoResponse, status_code=201)
 async def crear_pedido_completo(pedido_completo: PedidoCompletoCreate, db: Session = Depends(get_session)):

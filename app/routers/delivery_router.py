@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import JSONResponse
 from sqlmodel import Session
 from app.core.database import get_session
+from app.services import telegram_service
 from app.services.delivery_service import DeliveryService
 from app.schemas.delivery_schema import DeliveryCreate, DeliveryUpdate, DeliveryResponse
 
@@ -84,3 +86,13 @@ def delete_delivery(delivery_id: int, db: Session = Depends(get_session)):
     if not db_delivery:
         raise HTTPException(status_code=404, detail="Delivery no encontrado")
     return db_delivery
+
+
+@router.post("/notificacion-delivery/", status_code=200)
+async def notificacion_delivery(chat_id: int, nombre_delivery: str):
+    print("Notificación de delivery para chat_id:", chat_id)
+    msj: str = f"Salí afuera *tu pedido ya llegó!!!* \n *Delivery:* {nombre_delivery}"
+    await telegram_service.enviar_mensaje(chat_id, msj)
+    print("Mensaje enviado al chat_id:", chat_id)
+    return JSONResponse(content= {"estado":"ok"}, status_code=200)
+    

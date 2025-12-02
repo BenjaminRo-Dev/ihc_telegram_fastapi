@@ -7,7 +7,7 @@ MINIAPP = settings.FRONTEND
 
 async def enviar_mensaje(chat_id: int, text: str):
     async with httpx.AsyncClient() as client:
-        await client.post(f"{BOT}/sendMessage", json={"chat_id": chat_id, "text": text})
+        await client.post(f"{BOT}/sendMessage", json={"chat_id": chat_id, "text": text, "parse_mode": "Markdown",})
 
 
 async def abrir_app(chat_id: int, nombre_usuario: str):
@@ -37,11 +37,11 @@ async def abrir_app(chat_id: int, nombre_usuario: str):
 async def resumen_pedido(pedido):
     print("Pedido:", pedido)
     mensaje = "🧾 *Resumen de tu pedido:*\n\n"
+    mensaje += f"*Estado del pedido:* {pedido.estado}\n"
 
     mensaje += f"*Cliente:* {pedido.nombre_usuario}\n"
-    # mensaje += f"*Estado:* {pedido.estado}\n"
     # mensaje += f"*Ubicación de entrega:* {pedido.ubicacion_entrega}\n"
-    mensaje += f"*Precio de delivery:* Bs{pedido.precio_delivery:.2f}\n\n"
+    # mensaje += f"*Precio de delivery:* Bs{pedido.precio_delivery:.2f}\n\n"
 
     mensaje += "*Detalles:*\n"
     for detalle in pedido.detalles:
@@ -50,7 +50,7 @@ async def resumen_pedido(pedido):
             mensaje += f" (Obs: {detalle.observacion})"
         mensaje += "\n"
 
-    mensaje += f"\n*Total a pagar:* Bs{pedido.total:.2f}"
+    mensaje += f"\n*Total:* Bs{pedido.total:.2f}"
 
     async with httpx.AsyncClient() as client:
         await client.post(

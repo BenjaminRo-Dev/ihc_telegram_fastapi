@@ -18,14 +18,19 @@ async def telegram_webhook(request: Request, db: Session = Depends(get_session))
         texto = data["message"].get("text", "").lower()
 
         if texto == "/iniciar":
-            print({"chat_id": chat_id, "nombre_usuario": nombre_usuario})
+            # print({"chat_id": chat_id, "nombre_usuario": nombre_usuario})
             await abrir_app(chat_id, nombre_usuario)
             
         if texto == "/ubicacion_pedido":
-            ubicacion = PedidoService.get_ubicacion_pedido(db, str(chat_id))
-            if ubicacion:
-                await enviar_ubicacion(chat_id, ubicacion)
-            else:
-                await enviar_mensaje(chat_id, "No tenes pedidos registrados")
+            await _ubicacion_pedido(db, chat_id)
 
     return {"ok": True}
+
+
+async def _ubicacion_pedido(db: Session, chat_id: int):
+    ubicacion = PedidoService.get_ubicacion_pedido(db, str(chat_id))
+    if ubicacion:
+        await enviar_ubicacion(chat_id, ubicacion)
+    else:
+        await enviar_mensaje(chat_id, "No tenes pedidos registrados")
+
