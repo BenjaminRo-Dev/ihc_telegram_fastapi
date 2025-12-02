@@ -1,11 +1,14 @@
-from fastapi import APIRouter, Request
-from app.services.telegram_service import abrir_app, enviar_mensaje
+from fastapi import APIRouter, Request, Depends
+from sqlmodel import Session
+from app.core.database import get_session
+from app.services.pedido_service import PedidoService
+from app.services.telegram_service import abrir_app, enviar_mensaje, enviar_ubicacion
 
 router = APIRouter(tags=["Telegram Bot"])
 
 
 @router.post("/webhook")
-async def telegram_webhook(request: Request):
+async def telegram_webhook(request: Request, db: Session = Depends(get_session)):
 
     data = await request.json()
 
@@ -17,5 +20,12 @@ async def telegram_webhook(request: Request):
         if texto == "/iniciar":
             print({"chat_id": chat_id, "nombre_usuario": nombre_usuario})
             await abrir_app(chat_id, nombre_usuario)
+            
+        if texto == "/ubicacion_pedido":
+            ubicacion = PedidoService.get_ubicacion_pedido(db, str(chat_id))
+            if ubicacion:
+                await enviar_ubicacion(chat_id, ubicacion)
+            else:
+                await enviar_mensaje(chat_id, "No tenes pedidos registrados")
 
     return {"ok": True}

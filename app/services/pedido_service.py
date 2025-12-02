@@ -1,5 +1,5 @@
-from sqlmodel import Session, select
-from app.models.modelos import Pedido, Detalle
+from sqlmodel import Session, select, desc
+from app.models.modelos import Pedido, Detalle, Configuracion
 from app.schemas.pedido_schema import PedidoCreate, PedidoUpdate, PedidoCompletoCreate
 from app.services import telegram_service
 
@@ -124,3 +124,39 @@ class PedidoService:
         except Exception as e:
             db.rollback()
             raise e
+
+    @staticmethod
+    def get_ultimo_pedido(db: Session, chat_id: str):
+        """Obtener el último pedido de un usuario por chat_id"""
+        pedido = db.exec(
+            select(Pedido)
+            .where(Pedido.chat_id == chat_id)
+            .order_by(desc(Pedido.created_at))
+        ).first()
+        return pedido
+    
+    @staticmethod
+    def get_ubicacion_pedido(db: Session, chat_id: str):
+        """Obtener la ubicación del pedido según su estado"""
+        pedido = PedidoService.get_ultimo_pedido(db, chat_id)
+        
+        if not pedido:
+            return None
+        
+        # Si el pedido está en local, devolver la ubicación del restaurante
+        if pedido.estado.lower() == "en local":
+            print("Obteniendo ubicación del restaurante")
+            configuracion = db.exec(select(Configuracion)).first()
+            if configuracion:
+                return configuracion.ubicacion_restaurante
+        
+        if pedido.estado.lower() == "en camino":
+            print("Obteniendo ubicación del delivery")
+            if pedido.delivery:
+                return pedido.delivery.ubicacion
+        
+        else:
+            print("Obteniendo ubicación de entrega")
+            return pedido.ubicacion_entrega
+        
+        return None

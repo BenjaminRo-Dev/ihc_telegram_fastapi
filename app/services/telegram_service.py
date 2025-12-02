@@ -74,3 +74,16 @@ async def estado_pedido(pedido):
                 "parse_mode": "Markdown",
             },
         )
+
+
+async def enviar_ubicacion(chat_id: int, ubicacion_delibery: str):
+    latitud, longitud = map(float, ubicacion_delibery.split(","))
+    async with httpx.AsyncClient() as client:
+        await client.post(
+            f"{BOT}/sendLocation",
+            json={
+                "chat_id": chat_id,
+                "latitude": latitud,
+                "longitude": longitud,
+            },
+        )
